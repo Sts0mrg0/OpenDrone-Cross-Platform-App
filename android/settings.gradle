@@ -1,0 +1,3 @@
+rootProject.name = 'OpenDrone'
+
+include ':app'

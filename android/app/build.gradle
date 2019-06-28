@@ -138,7 +138,9 @@ android {
 }
 
 dependencies {
+    implementation project(':react-native-radial-gradient')
     implementation project(':react-native-maps')
+    implementation project(':react-native-webview')
     implementation project(':react-native-vector-icons')
     implementation project(':react-native-gesture-handler')
     implementation fileTree(dir: "libs", include: ["*.jar"])
@@ -152,3 +154,4 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
+

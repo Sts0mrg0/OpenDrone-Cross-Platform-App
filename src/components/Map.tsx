@@ -8,8 +8,8 @@ import MapView, {
 } from 'react-native-maps';
 interface Props {
   provider?: any;
-  latitude?: number;
-  longitude?: number;
+  latitude: number;
+  longitude: number;
   latitudeDelta?: number;
   longitudeDelta?: number;
   style?: {};

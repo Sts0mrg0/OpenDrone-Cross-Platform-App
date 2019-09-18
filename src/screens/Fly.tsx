@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  View,
-  Dimensions,
-  Text,
-  WebView,
-  SafeAreaView,
-  TouchableOpacity
-} from 'react-native';
+import { View, Dimensions, Text, WebView, SafeAreaView, TouchableOpacity } from 'react-native';
 
 import RNGamePadDual from '../components/game-pad/dual/dual-joystick';
 import colors from '../colors';
@@ -24,7 +17,7 @@ interface State {
 const { width, height } = Dimensions.get('window');
 
 const options = {
-  color: colors.primaryColor,
+  color: colors.notQuiteBlack,
   size: 500
 };
 
@@ -76,15 +69,13 @@ class Fly extends React.Component<Props, State> {
                 color: 'black'
               }}
             >
-              Altitude Hold is{' '}
-              {this.state.altHoldIcon === 'md-pause' ? 'ON' : 'OFF'}
+              Altitude Hold is {this.state.altHoldIcon === 'md-pause' ? 'ON' : 'OFF'}
             </Text>
             <View
               style={{
                 width: 15,
                 height: 15,
-                backgroundColor:
-                  this.state.altHoldIcon === 'md-pause' ? '#27ae60' : '#c0392b',
+                backgroundColor: this.state.altHoldIcon === 'md-pause' ? '#27ae60' : '#c0392b',
                 borderRadius: 15,
                 marginTop: 45
               }}

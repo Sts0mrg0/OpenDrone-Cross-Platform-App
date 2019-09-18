@@ -4,11 +4,7 @@ import Map from '../components/Map';
 
 class Drones extends Component {
   render() {
-    return (
-      <View style={styles.container}>
-        <Map />
-      </View>
-    );
+    return <View style={styles.container} />;
   }
 }
 export default Drones;

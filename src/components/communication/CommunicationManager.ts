@@ -40,6 +40,10 @@ export default class CommunicationManager {
     this._client.write(`${message}\n`);
   }
 
+  closeConnection() {
+    //this._client.clo
+  }
+
   private setPort(port: number) {
     this._port = port;
   }

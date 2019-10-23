@@ -39,7 +39,7 @@ steps:
     gitHubConnection: 'OpenDroneGithubConnection'
     repositoryName: 'OpenDroneAT/OpenDrone-Cross-Platform-App'
     action: 'create'
-    target: '$(Build.ArtifactStagingDirectory)'
+    target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
     tag: '$(Build.BuildNumber)'
     title: 'Automatic Azure DevOps Release'

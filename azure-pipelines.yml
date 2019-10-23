@@ -17,5 +17,16 @@ steps:
 
 - script: |
     npm install
-    npm run build
   displayName: 'npm install and build'
+  
+- script: |
+    cd ios
+    bundle install
+    fastlane build
+  displayName: 'Build iOS'
+  
+- script: |
+    cd android
+    bundle install
+    fastlane build
+  displayName: 'Build android'

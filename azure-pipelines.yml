@@ -32,3 +32,15 @@ steps:
     apksignerKeystorePassword: $(keystore_password)
     apksignerKeystoreAlias: $(key_alias)
     apksignerKeyPassword: $(key_password)
+
+- task: GitHubRelease@1
+  inputs:
+    gitHubConnection: 'OpenDroneGithubConnection'
+    repositoryName: 'OpenDroneAT/OpenDrone-Cross-Platform-App'
+    action: 'create'
+    target: '$(Build.SourceVersion)'
+    tagSource: 'gitTag'
+    title: 'Automatic Azure DevOps Release'
+    isPreRelease: true
+    changeLogCompareToRelease: 'lastNonDraftRelease'
+    changeLogType: 'commitBased'

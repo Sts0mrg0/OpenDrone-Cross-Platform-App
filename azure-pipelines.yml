@@ -24,3 +24,11 @@ steps:
     chmod +x gradlew
     ./gradlew bundleRelease
   displayName: 'Build Android'
+
+- task: AndroidSigning@3
+  inputs:
+    apkFiles: '**/*.apk'
+    apksignerKeystoreFile: 'OpenDrone_Keystore.jks'
+    apksignerKeystorePassword: $(keystore_password)
+    apksignerKeystoreAlias: $(key_alias)
+    apksignerKeyPassword: $(key_password)

@@ -40,8 +40,11 @@ steps:
     repositoryName: 'OpenDroneAT/OpenDrone-Cross-Platform-App'
     action: 'create'
     target: '$(Build.SourceVersion)'
-    tagSource: 'gitTag'
+    tagSource: 'userSpecifiedTag'
+    tag: 'AzureDevOps'
     title: 'Automatic Azure DevOps Release'
+    releaseNotesSource: 'inline'
+    releaseNotesInline: 'Automatic Azure DevOps Release $(Date:yyyyMMdd)'
     isPreRelease: true
     changeLogCompareToRelease: 'lastNonDraftRelease'
     changeLogType: 'commitBased'

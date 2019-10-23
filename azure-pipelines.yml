@@ -42,9 +42,11 @@ steps:
     target: '$(Build.SourceVersion)'
     tagSource: 'userSpecifiedTag'
     tag: '$(Build.BuildNumber)'
-    title: 'Automatic Azure DevOps Release'
+    title: 'Automatic Azure DevOps Release $(Build.BuildNumber)'
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
-    assets: '$(Build.ArtifactStagingDirectory)'
+    assets: |
+         $(Build.ArtifactStagingDirectory)/*.apk
+         $(Build.ArtifactStagingDirectory)/README.md
     isPreRelease: true
     addChangeLog: false

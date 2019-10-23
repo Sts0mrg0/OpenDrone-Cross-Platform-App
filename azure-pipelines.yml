@@ -41,9 +41,10 @@ steps:
     action: 'create'
     target: '$(Build.ArtifactStagingDirectory)'
     tagSource: 'userSpecifiedTag'
-    tag: 'AzureDevOps'
+    tag: '$(Build.BuildNumber)'
     title: 'Automatic Azure DevOps Release'
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
+    assets: '$(Build.ArtifactStagingDirectory)'
     isPreRelease: true
     addChangeLog: false

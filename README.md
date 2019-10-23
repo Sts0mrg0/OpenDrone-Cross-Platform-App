@@ -1,6 +1,3 @@
-|Android|IOS|
-|:-:|:-:|
-|[![Build status](https://build.appcenter.ms/v0.1/apps/0dde287e-fec0-4b35-a240-f9ab8487cc35/branches/master/badge)](https://appcenter.ms)|[![Build status](https://build.appcenter.ms/v0.1/apps/f804a9f7-cc85-46c9-a72a-2cbfed2ca367/branches/master/badge)](https://appcenter.ms)|
 ## OpenDrone Cross-Platform App
 ### ❗❗❗ WORK IN PROGRESS ❗❗❗
 made for everyone, not just Android users. 

@@ -29,9 +29,10 @@ steps:
   inputs:
     apkFiles: '**/*.apk'
     apksignerKeystoreFile: 'OpenDrone_Keystore.jks'
-    apksignerKeystorePassword: $(keystore_password)
-    apksignerKeystoreAlias: $(key_alias)
-    apksignerKeyPassword: $(key_password)
+    apksignerKeystorePassword: '$(keystore_password)'
+    apksignerKeystoreAlias: '$(key_alias)'
+    apksignerKeyPassword: '$(key_password)'
+    zipalign: false
 
 - task: GitHubRelease@1
   inputs:

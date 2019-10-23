@@ -19,12 +19,6 @@ steps:
     npm install
   displayName: 'npm install'
   
-#- script: |
-#    cd ios
-#    bundle install
-#    fastlane build
-#  displayName: 'Build iOS'
-  
 - script: |
     cd android
    ./gradlew bundleRelease

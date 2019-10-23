@@ -44,7 +44,6 @@ steps:
     tag: 'AzureDevOps'
     title: 'Automatic Azure DevOps Release'
     releaseNotesSource: 'inline'
-    releaseNotesInline: 'Automatic Azure DevOps Release $(Date:yyyyMMdd)'
+    releaseNotesInline: 'Automatic Azure DevOps Release'
     isPreRelease: true
-    changeLogCompareToRelease: 'lastNonDraftRelease'
-    changeLogType: 'commitBased'
+    addChangeLog: false

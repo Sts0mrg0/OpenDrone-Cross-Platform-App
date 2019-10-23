@@ -21,5 +21,6 @@ steps:
   
 - script: |
     cd android
-    sudo ./gradlew bundleRelease
+    chmod +x gradlew
+    ./gradlew bundleRelease
   displayName: 'Build Android'

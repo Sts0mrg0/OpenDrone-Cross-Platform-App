@@ -25,9 +25,9 @@ steps:
   displayName: 'npm install'
 
 - task: CocoaPods@0
-inputs:
-  workingDirectory: 'ios'
-  forceRepoUpdate: false
+  inputs:
+    workingDirectory: 'ios'
+    forceRepoUpdate: false
 
 - task: Xcode@5
   inputs:

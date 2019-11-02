@@ -28,13 +28,6 @@ steps:
   inputs:
     actions: 'clean build'
     xcWorkspacePath: '**/OpenDrone.xcodeproj'
-    packageApp: false
-  displayName: 'iOS Clean Build'
-
-- task: Xcode@5
-  inputs:
-    actions: 'build'
-    xcWorkspacePath: '**/OpenDrone.xcodeproj'
     sdk: '$(sdk)'
     scheme: '$(scheme)'
     configuration: '$(configuration)'

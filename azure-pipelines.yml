@@ -33,7 +33,7 @@ steps:
 - task: Xcode@5
   inputs:
     actions: 'build'
-    xcWorkspacePath: '**/OpenDrone.xcodeproj'
+    xcWorkspacePath: '**/*.xcodeproj/OpenDrone.xcworkspace'
     packageApp: false
 
 - task: AndroidSigning@3

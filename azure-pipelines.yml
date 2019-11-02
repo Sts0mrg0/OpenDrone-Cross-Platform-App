@@ -26,6 +26,13 @@ steps:
 
 - task: Xcode@5
   inputs:
+    actions: 'clean build'
+    xcWorkspacePath: '**/OpenDrone.xcodeproj/'
+    packageApp: false
+  displayName: 'iOS Clean Build'
+
+- task: Xcode@5
+  inputs:
     actions: 'build'
     xcWorkspacePath: '**/OpenDrone.xcodeproj'
     sdk: '$(sdk)'
@@ -34,6 +41,7 @@ steps:
     xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
     exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
     packageApp: false
+  displayName: 'Build iOS Debug'
   
 - script: |
     cd android

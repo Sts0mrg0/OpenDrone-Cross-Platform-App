@@ -23,18 +23,18 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
+
+- task: Xcode@5
+  inputs:
+    actions: 'build'
+    xcWorkspacePath: '**/*.xcodeproj'
+    packageApp: false
   
 - script: |
     cd android
     chmod +x gradlew
     ./gradlew bundleRelease
   displayName: 'Build Android'
-
-- task: Xcode@5
-  inputs:
-    actions: 'build'
-    xcWorkspacePath: '**/*.xcodeproj/OpenDrone.xcworkspace'
-    packageApp: false
 
 - task: AndroidSigning@3
   inputs:

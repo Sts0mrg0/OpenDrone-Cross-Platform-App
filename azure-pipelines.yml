@@ -7,7 +7,12 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'macOS-10.13'
+
+variables:
+  scheme: ''
+  sdk: 'iphoneos'
+  configuration: 'Release'
 
 steps:
 - task: NodeTool@0
@@ -24,6 +29,15 @@ steps:
     chmod +x gradlew
     ./gradlew bundleRelease
   displayName: 'Build Android'
+
+- task: Xcode@5
+  inputs:
+    sdk: '$(sdk)'
+    scheme: '$(scheme)'
+    configuration: '$(configuration)'
+    xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
+    exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
+    packageApp: false
 
 - task: AndroidSigning@3
   inputs:

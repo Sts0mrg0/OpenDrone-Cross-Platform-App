@@ -32,9 +32,9 @@ steps:
 - task: Xcode@5
   inputs:
     actions: 'clean build'
-    xcWorkspacePath: '**/OpenDrone.xcodeproj'
+    xcWorkspacePath: '**/OpenDrone.xcworkspace'
     sdk: '$(sdk)'
-    scheme: '$(scheme)'
+    #scheme: '$(scheme)'
     configuration: '$(configuration)'
     xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
     exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'

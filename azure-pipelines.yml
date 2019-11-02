@@ -24,10 +24,15 @@ steps:
     npm install
   displayName: 'npm install'
 
+- task: CocoaPods@0
+  inputs:
+    workingDirectory: 'ios'
+    forceRepoUpdate: false
+
 - task: Xcode@5
   inputs:
     actions: 'clean build'
-    xcWorkspacePath: '**/OpenDrone.xcodeproj'
+    xcWorkspacePath: '**/OpenDrone.xcworkspace'
     sdk: '$(sdk)'
     scheme: '$(scheme)'
     configuration: '$(configuration)'

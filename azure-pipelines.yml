@@ -27,7 +27,7 @@ steps:
 - task: Xcode@5
   inputs:
     actions: 'clean build'
-    xcWorkspacePath: '**/OpenDrone.xcodeproj/'
+    xcWorkspacePath: '**/OpenDrone.xcodeproj'
     packageApp: false
   displayName: 'iOS Clean Build'
 

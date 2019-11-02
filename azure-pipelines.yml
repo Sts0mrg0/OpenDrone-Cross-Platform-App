@@ -28,11 +28,11 @@ steps:
   inputs:
     actions: 'clean build'
     xcWorkspacePath: '**/OpenDrone.xcodeproj'
-    #sdk: '$(sdk)'
-    scheme: '$(scheme)'
-    #configuration: '$(configuration)'
-    #xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
-    #exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
+    sdk: '$(sdk)'
+    #scheme: '$(scheme)'
+    configuration: '$(configuration)'
+    xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
+    exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
     packageApp: false
   displayName: 'Build iOS Debug'
   

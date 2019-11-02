@@ -1621,6 +1621,10 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 9719C7FAF0232FACBBEFB4BA /* Pods-OpenDrone.debug.xcconfig */;
 			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					"$(ARCHS_STANDARD_64_BIT)",
+				);
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;

@@ -10,7 +10,7 @@ pool:
   vmImage: 'macOS-10.13'
 
 variables:
-  scheme: ''
+  scheme: 'OpenDrone'
   sdk: 'iphoneos'
   configuration: 'Release'
 
@@ -38,6 +38,7 @@ steps:
     xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
     exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
     packageApp: false
+  displayName: 'Build iOS'
 
 - task: AndroidSigning@3
   inputs:

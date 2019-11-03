@@ -1,3 +1,4 @@
+[![Build Status](https://dev.azure.com/OpenDroneAT/OpenDrone-App/_apis/build/status/OpenDroneAT.OpenDrone-Cross-Platform-App?branchName=master)](https://dev.azure.com/OpenDroneAT/OpenDrone-App/_build/latest?definitionId=3&branchName=master)  
 ## OpenDrone Cross-Platform App
 ### ❗❗❗ WORK IN PROGRESS ❗❗❗
 made for everyone, not just Android users. 

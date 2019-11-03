@@ -53,7 +53,7 @@ steps:
 
 - task: Xcode@5
   inputs:
-    actions: 'clean build'
+    actions: 'clean build clean archive'
     xcWorkspacePath: '**/OpenDrone.xcworkspace'
     sdk: '$(sdk)'
     scheme: '$(scheme)'

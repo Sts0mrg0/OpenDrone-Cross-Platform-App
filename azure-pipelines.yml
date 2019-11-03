@@ -79,6 +79,18 @@ steps:
     apksignerKeyPassword: '$(key_password)'
     zipalign: false
 
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.ipa'
+    targetFolder: '$build.artifactStagingDirectory'
+  displayName: 'Copy IPA' 
+
+- task: CopyFiles@2
+  inputs:
+    contents: '**/*.apk'
+    targetFolder: '$build.artifactStagingDirectory'
+  displayName: 'Copy APK' 
+
 - task: GitHubRelease@1
   inputs:
     gitHubConnection: 'OpenDroneGithubConnection'
@@ -91,7 +103,10 @@ steps:
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
-         $(Build.ArtifactStagingDirectory)/*.apk
-         $(Build.ArtifactStagingDirectory)/README.md
+         $(build.artifactStagingDirectory)/*.apk
+         $(build.artifactStagingDirectory)/README.md
+         $(build.artifactStagingDirectory)/*.apk
     isPreRelease: true
     addChangeLog: false
+
+  

@@ -82,13 +82,13 @@ steps:
 - task: CopyFiles@2
   inputs:
     contents: '**/*.ipa'
-    targetFolder: '$build.artifactStagingDirectory'
+    targetFolder: '$build.artifactStagingDirectory/binaries'
   displayName: 'Copy IPA' 
 
 - task: CopyFiles@2
   inputs:
     contents: '**/*.apk'
-    targetFolder: '$build.artifactStagingDirectory'
+    targetFolder: '$build.artifactStagingDirectory/binaries'
   displayName: 'Copy APK' 
 
 - task: GitHubRelease@1
@@ -103,9 +103,8 @@ steps:
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
-         $(build.artifactStagingDirectory)/*.apk
-         $(build.artifactStagingDirectory)/README.md
-         $(build.artifactStagingDirectory)/*.apk
+         $(Build.ArtifactStagingDirectory)/binaries/*.apk
+         $(Build.ArtifactStagingDirectory)/binaries/*.ipa
     isPreRelease: true
     addChangeLog: false
 

@@ -53,7 +53,7 @@ steps:
 
 - task: Xcode@5
   inputs:
-    actions: 'clean build clean archive'
+    actions: 'clean build'
     xcWorkspacePath: '**/OpenDrone.xcworkspace'
     sdk: '$(sdk)'
     scheme: '$(scheme)'
@@ -84,12 +84,14 @@ steps:
     contents: '**/*.ipa'
     targetFolder: '$build.artifactStagingDirectory/binaries'
   displayName: 'Copy IPA' 
+- task: PublishBuildArtifacts@1
 
 - task: CopyFiles@2
   inputs:
     contents: '**/*.apk'
     targetFolder: '$build.artifactStagingDirectory/binaries'
   displayName: 'Copy APK' 
+- task: PublishBuildArtifacts@1
 
 - task: GitHubRelease@1
   inputs:
@@ -103,8 +105,8 @@ steps:
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
-         **/*.apk
-         **/*.ipa
+         $build.artifactStagingDirectory/binaries/*.apk
+         $build.artifactStagingDirectory/binaries/*.ipa
     isPreRelease: true
     addChangeLog: false
 

@@ -104,7 +104,6 @@ steps:
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
          **/*.apk
-         **/README.md
          **/*.ipa
     isPreRelease: true
     addChangeLog: false

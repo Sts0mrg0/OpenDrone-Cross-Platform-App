@@ -33,12 +33,23 @@ steps:
   inputs:
     certSecureFile: 'OpenDroneDistribution.p12'
     certPwd: $(P12Password)
-  displayName: "Install Apple Certificate"
+  displayName: "Install Apple Certificate (Distribution)"
 
 - task: InstallAppleProvisioningProfile@1
   inputs:
     provProfileSecureFile: 'OpenDroneDistribution.mobileprovision'
-  displayName: "Install Apple Provisioning Profile"
+  displayName: "Install Apple Provisioning Profile (Distribution)"
+
+- task: InstallAppleCertificate@2
+  inputs:
+    certSecureFile: 'OpenDroneDevelopment.p12'
+    certPwd: $(P12PasswordDev)
+  displayName: "Install Apple Certificate (Development)"
+
+- task: InstallAppleProvisioningProfile@1
+  inputs:
+    provProfileSecureFile: 'OpenDroneDevelopment.mobileprovision'
+  displayName: "Install Apple Provisioning Profile (Development)"
 
 - task: Xcode@5
   inputs:

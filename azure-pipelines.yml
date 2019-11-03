@@ -29,6 +29,17 @@ steps:
     workingDirectory: 'ios'
     forceRepoUpdate: false
 
+- task: InstallAppleCertificate@2
+  inputs:
+    certSecureFile: 'OpenDroneDistribution.p12'
+    certPwd: $(P12Password)
+  displayName: "Install Apple Certificate"
+
+- task: InstallAppleProvisioningProfile@1
+  inputs:
+    provProfileSecureFile: 'OpenDroneDistribution.mobileprovision'
+  displayName: "Install Apple Provisioning Profile"
+
 - task: Xcode@5
   inputs:
     actions: 'clean build'
@@ -38,8 +49,9 @@ steps:
     configuration: '$(configuration)'
     xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
     exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
-    packageApp: false
-  displayName: 'Build iOS Debug'
+    signingOption: 'default' # Options: nosign, default, manual, auto
+    useXcpretty: false
+  displayName: 'Build iOS Release'
   
 - script: |
     cd android

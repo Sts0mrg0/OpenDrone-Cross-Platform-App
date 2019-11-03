@@ -83,14 +83,14 @@ steps:
   inputs:
     contents: '**/*.ipa'
     targetFolder: '$build.artifactStagingDirectory'
-  displayName: 'Copy IPA' 
+  displayName: 'Copy .IPA' 
 - task: PublishBuildArtifacts@1
 
 - task: CopyFiles@2
   inputs:
     contents: '**/*.apk'
     targetFolder: '$build.artifactStagingDirectory'
-  displayName: 'Copy APK' 
+  displayName: 'Copy .APK' 
 - task: PublishBuildArtifacts@1
 
 - task: GitHubRelease@1

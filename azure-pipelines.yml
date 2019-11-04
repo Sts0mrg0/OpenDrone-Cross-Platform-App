@@ -77,8 +77,8 @@ steps:
     apksignerKeystorePassword: '$(keystore_password)'
     apksignerKeystoreAlias: '$(key_alias)'
     apksignerKeyPassword: '$(key_password)'
-    apksignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/OpenDrone.release.apk
-    zipalign: false
+    apksignerArguments: '--out $Build.SourcesDirectory/app/build/outputs/apk/release/OpenDrone.release.apk'
+    zipalign: true
 
 - task: CopyFiles@2
   inputs:
@@ -89,7 +89,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: $(Build.SourcesDirectory)
+    SourceFolder: '$(Build.SourcesDirectory)'
     contents: '**/*.release.apk'
     targetFolder: '$build.artifactStagingDirectory'
   displayName: 'Copy .APK' 

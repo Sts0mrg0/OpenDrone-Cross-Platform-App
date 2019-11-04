@@ -7,11 +7,10 @@ trigger:
 - master
 
 pool:
-  vmImage: 'macOS-10.13'
+  vmImage: 'windows-latest'
 
 variables:
   scheme: 'OpenDrone'
-  sdk: 'iphoneos'
   configuration: 'Release'
 
 steps:
@@ -23,46 +22,6 @@ steps:
 - script: |
     npm install
   displayName: 'npm install'
-
-- task: CocoaPods@0
-  inputs:
-    workingDirectory: 'ios'
-    forceRepoUpdate: false
-
-- task: InstallAppleCertificate@2
-  inputs:
-    certSecureFile: 'OpenDroneDistribution.p12'
-    certPwd: $(P12Password)
-  displayName: "Install Apple Certificate (Distribution)"
-
-- task: InstallAppleProvisioningProfile@1
-  inputs:
-    provProfileSecureFile: 'OpenDroneDistribution.mobileprovision'
-  displayName: "Install Apple Provisioning Profile (Distribution)"
-
-- task: InstallAppleCertificate@2
-  inputs:
-    certSecureFile: 'OpenDroneDevelopment.p12'
-    certPwd: $(P12PasswordDev)
-  displayName: "Install Apple Certificate (Development)"
-
-- task: InstallAppleProvisioningProfile@1
-  inputs:
-    provProfileSecureFile: 'OpenDroneDevelopment.mobileprovision'
-  displayName: "Install Apple Provisioning Profile (Development)"
-
-- task: Xcode@5
-  inputs:
-    actions: 'clean build'
-    xcWorkspacePath: '**/OpenDrone.xcworkspace'
-    sdk: '$(sdk)'
-    scheme: '$(scheme)'
-    configuration: '$(configuration)'
-    xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
-    exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
-    signingOption: 'default' # Options: nosign, default, manual, auto
-    useXcpretty: false
-  displayName: 'Build iOS Release'
   
 - script: |
     cd android
@@ -73,26 +32,26 @@ steps:
 - task: AndroidSigning@3
   inputs:
     apkFiles: '**/*.apk'
+    apksign: true
     apksignerKeystoreFile: 'OpenDrone_Keystore.jks'
     apksignerKeystorePassword: '$(keystore_password)'
     apksignerKeystoreAlias: '$(key_alias)'
     apksignerKeyPassword: '$(key_password)'
-    zipalign: false
+    apksignerArguments: --out $(Build.SourcesDirectory)/app/build/outputs/apk/release/OpenDrone.release.apk
+    zipalign: true
 
 - task: CopyFiles@2
   inputs:
-    contents: '**/*.ipa'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy .IPA' 
-- task: PublishBuildArtifacts@1
+    SourceFolder: $(Build.SourcesDirectory)
+    contents: '**/*.release.apk' 
+    targetFolder: '$(build.artifactStagingDirectory)'
+    overWrite: true
 
-- task: CopyFiles@2
-  inputs:
-    SourceFolder: '$build.SourcesDirectory'
-    contents: '**/*.apk'
-    targetFolder: '$(Build.ArtifactStagingDirectory)'
-  displayName: 'Copy .APK' 
 - task: PublishBuildArtifacts@1
+  inputs:
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/'
+    artifactName: 'apks' 
+    publishLocation: 'container'
 
 - task: GitHubRelease@1
   inputs:

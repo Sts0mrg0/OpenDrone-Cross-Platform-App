@@ -105,8 +105,7 @@ steps:
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
-         $build.artifactStagingDirectory/*.apk
-         $build.artifactStagingDirectory/*.ipa
+         $build.artifactStagingDirectory
     isPreRelease: true
     addChangeLog: false
 

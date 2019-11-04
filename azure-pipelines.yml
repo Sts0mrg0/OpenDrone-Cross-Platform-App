@@ -77,21 +77,21 @@ steps:
     apksignerKeystorePassword: '$(keystore_password)'
     apksignerKeystoreAlias: '$(key_alias)'
     apksignerKeyPassword: '$(key_password)'
-    apksignerArguments: '--out $Build.SourcesDirectory/app/build/outputs/apk/release/OpenDrone.release.apk'
-    zipalign: true
+    apksignerArguments: '--out $(Build.SourcesDirectory)/app/build/outputs/apk/release/OpenDrone.release.apk'
+    zipalign: false
 
 - task: CopyFiles@2
   inputs:
     contents: '**/*.ipa'
-    targetFolder: '$build.artifactStagingDirectory'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Copy .IPA' 
 - task: PublishBuildArtifacts@1
 
 - task: CopyFiles@2
   inputs:
-    SourceFolder: '$(Build.SourcesDirectory)'
+    SourceFolder: '$build.SourcesDirectory'
     contents: '**/*.release.apk'
-    targetFolder: '$build.artifactStagingDirectory'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
   displayName: 'Copy .APK' 
 - task: PublishBuildArtifacts@1
 

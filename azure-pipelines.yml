@@ -84,18 +84,20 @@ steps:
 - task: Xcode@5
   inputs:
     actions: 'clean build'
-    xcWorkspacePath: '**/OpenDrone.xcworkspace'
-    sdk: '$(sdk)'
-    scheme: '$(scheme)'
     configuration: '$(configuration)'
-    xcodeVersion: 'default' # Options: default, 10, 9, 8, specifyPath
-    exportPath: '$(agent.buildDirectory)/output/$(sdk)/$(configuration)'
-    signingOption: 'default' # Options: nosign, default, manual, auto
+    sdk: '$(sdk)'
+    xcWorkspacePath: '**/OpenDrone.xcworkspace'
+    scheme: '$(scheme)'
+    packageApp: true
+    archivePath: '$(Build.SourcesDirectory)/archive/'
+    exportPath: '$(Build.SourcesDirectory)/ios/'
+    signingOption: 'default'
     useXcpretty: false
   displayName: 'Build iOS Release'
 
 - task: CopyFiles@2
   inputs:
+    SourceFolder: '$(Build.SourcesDirectory)/ios/'
     contents: '**/*.ipa'
     targetFolder: '$build.artifactStagingDirectory'
   displayName: 'Copy .IPA' 
@@ -114,6 +116,7 @@ steps:
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
          $(Build.ArtifactStagingDirectory)/*.apk
+         $(Build.ArtifactStagingDirectory)/*.ipa
     isPreRelease: true
     addChangeLog: false
 

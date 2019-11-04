@@ -44,12 +44,12 @@ steps:
   inputs:
     SourceFolder: $(Build.SourcesDirectory)
     contents: '**/*.release.apk' 
-    targetFolder: '$(build.artifactStagingDirectory)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
     overWrite: true
 
 - task: PublishBuildArtifacts@1
   inputs:
-    pathtoPublish: '$(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/'
+    pathtoPublish: '$(Build.ArtifactStagingDirectory)'
     artifactName: 'apks' 
     publishLocation: 'container'
 
@@ -65,7 +65,7 @@ steps:
     releaseNotesSource: 'inline'
     releaseNotesInline: 'Automatic Azure DevOps Release'
     assets: |
-         $(Build.ArtifactStagingDirectory)/app/build/outputs/apk/release/*.apk
+         $(Build.ArtifactStagingDirectory)/*.apk
     isPreRelease: true
     addChangeLog: false
 

@@ -1,0 +1,10 @@
+export const CODE_THROTTLE = 1;
+export const CODE_YAW = 3;
+export const CODE_PITCH = 5;
+export const CODE_ROLL = 7;
+export const CODE_GO_HOME = 9;
+export const CODE_ABORT = 10;
+export const CODE_SPIN_MOTOR = 17;
+export const CODE_ARM = 30;
+export const CODE_CALIBRATE = 20;
+export const CODE_I_AM_STILL_THERE = 1337;

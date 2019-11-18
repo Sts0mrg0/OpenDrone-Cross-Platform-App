@@ -1,29 +1,31 @@
+import { IStickMovement } from "../../models/IStickMovement";
+
 export class OpenDroneFrame {
-  data: string[];
+  values: IStickMovement[];
   codes: string[];
 
-  constructor(data: string[], codes: string[]) {
-    this.data = data;
-    this.codes = codes;
+  constructor(values: IStickMovement[]) {
+    this.values = values;
   }
 
   toString() {
-    const terminator = ';';
-    let str = '';
+    const terminator = ";";
+    let str = "";
 
-    str += '1010101010101000' + terminator;
-    str += '1' + terminator;
-    str += this.data.length + '' + terminator;
+    str += "1010101010101000" + terminator;
+    str += "1" + terminator;
+    str += this.values.length + "" + terminator;
 
-    for (let i = 0; i < this.data.length; i++) {
-      const curCode = this.codes[i];
-      const curData = this.data[i];
+    for (const val of this.values) {
+      const code = val.code;
+      const data = val.val;
 
-      str += curCode + '' + terminator;
-      str += curData + '' + terminator;
-      str += '1' + terminator;
+      str += code + "" + terminator;
+      str += data + "" + terminator;
+      str += "1" + terminator;
     }
-    str += '0001010101010101' + terminator;
+
+    str += "0001010101010101" + terminator;
 
     return str;
   }

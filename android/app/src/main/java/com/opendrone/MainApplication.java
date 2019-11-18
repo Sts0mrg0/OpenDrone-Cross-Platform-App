@@ -3,6 +3,7 @@ package com.opendrone;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.peel.react.TcpSocketsModule;
 import com.surajit.rnrg.RNRadialGradientPackage;
 import com.airbnb.android.react.maps.MapsPackage;
 import com.reactnativecommunity.webview.RNCWebViewPackage;
@@ -28,6 +29,7 @@ public class MainApplication extends Application implements ReactApplication {
     @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(new MainReactPackage(),
+            new TcpSocketsModule(),
             new RNRadialGradientPackage(),
             new MapsPackage(),
             new RNCWebViewPackage(), new VectorIconsPackage(),

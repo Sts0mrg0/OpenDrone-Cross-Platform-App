@@ -5,7 +5,6 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		00864AB9591B439996051890 /* libRNVectorIcons.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 93651CB6C6B946CF97EB7FEC /* libRNVectorIcons.a */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
@@ -76,6 +75,7 @@
 		ED2971652150620600B7C4FE /* JavaScriptCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ED2971642150620600B7C4FE /* JavaScriptCore.framework */; };
 		F027DDBDD5A8376D03002FD2 /* libPods-OpenDrone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 96903B2811984C097BE2A1AE /* libPods-OpenDrone.a */; };
 		FF06D8707F984202A33B7840 /* libRNGestureHandler-tvOS.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D000B5C23F9348B1916F5F33 /* libRNGestureHandler-tvOS.a */; };
+		C3A7C90827E8401DB1472EFB /* libTcpSockets.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5747B68F59AA48649DAE1DDD /* libTcpSockets.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -482,6 +482,8 @@
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
 		EEE495BED77C4380879D2307 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = AirMaps.xcodeproj; path = "../node_modules/react-native-maps/lib/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; };
 		F1FA6BDBB04045EB9D2A83D6 /* Octicons.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Octicons.ttf; path = "../node_modules/react-native-vector-icons/Fonts/Octicons.ttf"; sourceTree = "<group>"; };
+		D7F9BD0C0FDF44F8AAD47D32 /* TcpSockets.xcodeproj */ = {isa = PBXFileReference; name = "TcpSockets.xcodeproj"; path = "../node_modules/react-native-tcp/ios/TcpSockets.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		5747B68F59AA48649DAE1DDD /* libTcpSockets.a */ = {isa = PBXFileReference; name = "libTcpSockets.a"; path = "libTcpSockets.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -516,6 +518,7 @@
 				042AB8A8596943CAB5BAA758 /* libAirMaps.a in Frameworks */,
 				70313456E46845F2A45E355F /* libSRSRadialGradient.a in Frameworks */,
 				F027DDBDD5A8376D03002FD2 /* libPods-OpenDrone.a in Frameworks */,
+				C3A7C90827E8401DB1472EFB /* libTcpSockets.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -815,6 +818,7 @@
 				0B350BFB64F846DA8A089F90 /* RNCWebView.xcodeproj */,
 				EEE495BED77C4380879D2307 /* AirMaps.xcodeproj */,
 				6DAA020DB24C4160978A5755 /* SRSRadialGradient.xcodeproj */,
+				D7F9BD0C0FDF44F8AAD47D32 /* TcpSockets.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1567,12 +1571,14 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = OpenDroneTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1600,12 +1606,14 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = OpenDroneTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1651,6 +1659,7 @@
 					"$(SRCROOT)..",
 					ode_modules,
 					"eact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = OpenDrone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1692,6 +1701,7 @@
 					"$(SRCROOT)..",
 					ode_modules,
 					"eact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = OpenDrone/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -1726,11 +1736,13 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = "OpenDrone-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1767,11 +1779,13 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = "OpenDrone-tvOS/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1807,11 +1821,13 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = "OpenDrone-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -1847,11 +1863,13 @@
 					"$(SRCROOT)..\node_modules\neact-native-webviewios",
 					"$(SRCROOT)..\node_modules\neact-native-mapslibios/**",
 					"$(SRCROOT)..\node_modules\neact-native-radial-gradientios",
+					"$(SRCROOT)\..\node_modules\react-native-tcp\ios/**",
 				);
 				INFOPLIST_FILE = "OpenDrone-tvOSTests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

@@ -8,3 +8,4 @@ export const CODE_SPIN_MOTOR = 17;
 export const CODE_ARM = 30;
 export const CODE_CALIBRATE = 20;
 export const CODE_I_AM_STILL_THERE = 1337;
+export const CODE_ALT_CONTROL = 47;

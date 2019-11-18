@@ -1,14 +1,34 @@
-import React, { Component } from 'react';
-import { View, Dimensions, Text, WebView, SafeAreaView, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { Component } from "react";
+import { View, Dimensions, Text, WebView, SafeAreaView, TouchableOpacity, StyleSheet } from "react-native";
 
-import RNGamePadDual from '../components/game-pad/dual/dual-joystick';
-import colors from '../colors';
-import Icon from 'react-native-vector-icons/Ionicons';
-import { Fonts } from '../fonts';
-import ManualFlightButton from '../components/ManualFlightButton';
-import { TOLERANCE_PERCENT, MAX_DIRECTION_VALUE, MIN_DIRECTION_VALUE, MAX_MOTOR_VALUE, MIN_MOTOR_VALUE } from '../utils/OpenDroneUtils';
-import { IStickMovement } from '../models/IStickMovement';
-import { CODE_YAW, CODE_ROLL, CODE_THROTTLE, CODE_PITCH } from '../components/communication/Codes';
+import RNGamePadDual from "../components/game-pad/dual/dual-joystick";
+import colors from "../colors";
+import Icon from "react-native-vector-icons/Ionicons";
+import { Fonts } from "../fonts";
+import ManualFlightButton from "../components/ManualFlightButton";
+import {
+  TOLERANCE_PERCENT,
+  MAX_DIRECTION_VALUE,
+  MIN_DIRECTION_VALUE,
+  MAX_MOTOR_VALUE,
+  MIN_MOTOR_VALUE,
+  PORT,
+  IP
+} from "../utils/OpenDroneUtils";
+import { IStickMovement } from "../models/IStickMovement";
+import {
+  CODE_YAW,
+  CODE_ROLL,
+  CODE_THROTTLE,
+  CODE_PITCH,
+  CODE_ARM,
+  CODE_ALT_CONTROL,
+  CODE_GO_HOME
+} from "../components/communication/Codes";
+import CommunicationManager from "../components/communication/CommunicationManager";
+import { OpenDroneFrame } from "../components/communication/OpenDroneFrame";
+
+const communicationManager = CommunicationManager.getInstance(IP, PORT);
 
 interface Props {}
 interface State {
@@ -17,6 +37,7 @@ interface State {
   armText: string;
   armIcon: string;
   stickTouchedBottom: boolean;
+  isArmed: boolean;
 }
 
 const options = {
@@ -28,11 +49,12 @@ class Fly extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      altHoldText: 'ALT HOLD ON',
-      altHoldIcon: 'md-arrow-round-up',
-      armText: 'ARM',
-      armIcon: 'md-sync',
-      stickTouchedBottom: false
+      altHoldText: "ALT HOLD ON",
+      altHoldIcon: "md-arrow-round-up",
+      armText: "ARM",
+      armIcon: "md-sync",
+      stickTouchedBottom: false,
+      isArmed: false
     };
   }
 
@@ -41,29 +63,36 @@ class Fly extends React.Component<Props, State> {
       <SafeAreaView style={{ flex: 1 }}>
         <View style={styles.container}>
           <RNGamePadDual
-            style={{ width: '50%', height: '50%' }}
+            style={{ width: "50%", height: "50%" }}
             options={options}
             options2={options}
             onRightMove={this.handleOnRightMove}
             onLeftMove={this.handleOnLeftMove}
           />
           <View style={styles.altHoldContainer}>
-            <Text style={styles.altHoldTxt}>Altitude Hold is {this.state.altHoldIcon === 'md-pause' ? 'ON' : 'OFF'}</Text>
+            <Text style={styles.altHoldTxt}>
+              Altitude Hold is {this.state.altHoldIcon === "md-pause" ? "ON" : "OFF"}
+            </Text>
             <View
               style={[
                 styles.altHoldIndicator,
                 {
-                  backgroundColor: this.state.altHoldIcon === 'md-pause' ? '#27ae60' : '#c0392b'
+                  backgroundColor: this.state.altHoldIcon === "md-pause" ? "#27ae60" : "#c0392b"
                 }
               ]}
             />
           </View>
 
           <View style={styles.buttonsContainer}>
-            <ManualFlightButton style={styles.manFlightButton} text='HOME' onPress={() => {}} iconName='md-home' />
+            <ManualFlightButton
+              style={styles.manFlightButton}
+              text="HOME"
+              onPress={() => this.handleGoHome()}
+              iconName="md-home"
+            />
             <ManualFlightButton
               style={{
-                transform: [{ rotate: '90deg' }],
+                transform: [{ rotate: "90deg" }],
                 margin: 10,
                 width: 70
               }}
@@ -83,28 +112,50 @@ class Fly extends React.Component<Props, State> {
     );
   }
 
+  handleGoHome() {
+    const values: IStickMovement[] = [{ code: CODE_GO_HOME, val: 1 }];
+    this.sometimesUHaveToSendIt(values);
+  }
+
+  sometimesUHaveToSendIt(values: IStickMovement[]) {
+    const frame = new OpenDroneFrame(values);
+    const frameStr = frame.toString();
+    console.log(frameStr);
+    communicationManager.sendMessage(frameStr);
+  }
+
   handleOnRightMove = (evt, data) => {
-    console.log('handleOnRightMove', data.angle);
-    //const rad = data.angle.radian;
-    //const distance = data.distance;
-    //const values = this.interpretThrottleStick(rad, distance, false, MAX_DIRECTION_VALUE, MIN_DIRECTION_VALUE);
+    const rad = data.angle.radian;
+    const distance = data.distance;
+    const values = this.handleStickMove(rad, distance, false, MAX_DIRECTION_VALUE, MIN_DIRECTION_VALUE);
+    if (this.state.stickTouchedBottom && this.state.isArmed) {
+      this.sometimesUHaveToSendIt(values);
+    }
   };
 
   handleOnLeftMove = (evt, data) => {
-    console.log('handleOnLeftMove', data.angle);
-    //const rad = data.angle.radian;
-    //const distance = data.distance;
-    //const values = this.interpretThrottleStick(rad, distance, false, MAX_MOTOR_VALUE, MIN_MOTOR_VALUE);
+    const rad = data.angle.radian;
+    const distance = data.distance;
+    const values = this.handleStickMove(rad, distance, true, MAX_MOTOR_VALUE, MIN_MOTOR_VALUE);
+    if (this.state.stickTouchedBottom && this.state.isArmed) {
+      this.sometimesUHaveToSendIt(values);
+    }
   };
 
-  interpretThrottleStick(rad: number, distance: number, isThrottleStick: boolean, maxValue: number, minValue: number): IStickMovement[] {
+  handleStickMove(
+    rad: number,
+    distance: number,
+    isThrottleStick: boolean,
+    maxValue: number,
+    minValue: number
+  ): IStickMovement[] {
     const powerDifference = maxValue - minValue;
 
     //Calculation for the x-axis
     const hypothenusis = distance;
     let adjacentX = Math.cos(rad) * hypothenusis;
     let adjacentPercent = this.getPercentFromSticks(50, adjacentX);
-    let values: IStickMovement[];
+    let values: IStickMovement[] = [];
     const yawOrRollVal = minValue + powerDifference * (adjacentPercent / 100.0);
 
     //Calculation for the y-axis
@@ -112,10 +163,10 @@ class Fly extends React.Component<Props, State> {
     let oppositePercent = this.getPercentFromSticks(50, opposite);
     const throttleOrPitchVal = minValue + powerDifference * (oppositePercent / 100.0);
 
-    values[0] = { code: isThrottleStick ? CODE_YAW : CODE_ROLL, val: yawOrRollVal };
-    values[1] = { code: isThrottleStick ? CODE_THROTTLE : CODE_PITCH, val: throttleOrPitchVal };
+    values[0] = { code: isThrottleStick ? CODE_YAW : CODE_ROLL, val: Math.round(yawOrRollVal) };
+    values[1] = { code: isThrottleStick ? CODE_THROTTLE : CODE_PITCH, val: Math.round(throttleOrPitchVal) };
 
-    if (values[1][1] <= minValue + (minValue * TOLERANCE_PERCENT) / 100 && values[1][1] >= minValue && isThrottleStick) {
+    if (values[1].val <= minValue + minValue * (TOLERANCE_PERCENT / 100) && isThrottleStick) {
       this.setState({ stickTouchedBottom: true });
     }
 
@@ -134,30 +185,56 @@ class Fly extends React.Component<Props, State> {
   }
 
   handleArmPressed = () => {
-    if (this.state.armIcon === 'md-sync') {
-      this.setState({
-        armText: 'STOP',
-        armIcon: 'md-hand'
-      });
+    if (this.state.armIcon === "md-sync") {
+      this.doArm();
     } else {
-      this.setState({
-        armText: 'ARM',
-        armIcon: 'md-sync'
-      });
+      this.doUnarm();
     }
   };
 
+  doArm() {
+    const values: IStickMovement[] = [{ code: CODE_ARM, val: 1 }];
+    this.sometimesUHaveToSendIt(values);
+    this.setState({
+      armText: "STOP",
+      armIcon: "md-hand",
+      isArmed: true
+    });
+  }
+
+  doUnarm() {
+    const values: IStickMovement[] = [{ code: CODE_ARM, val: 1 }];
+    this.sometimesUHaveToSendIt(values);
+    this.setState({
+      armText: "ARM",
+      armIcon: "md-sync",
+      isArmed: false
+    });
+  }
+
+  activateAltHold() {
+    this.setState({
+      altHoldText: "ALT HOLD ON",
+      altHoldIcon: "md-arrow-round-up"
+    });
+    const content: IStickMovement[] = [{ code: CODE_ALT_CONTROL, val: 1 }];
+    this.sometimesUHaveToSendIt(content);
+  }
+
+  stopAltHold() {
+    this.setState({
+      altHoldText: "ALT HOLD OFF",
+      altHoldIcon: "md-pause"
+    });
+    const content: IStickMovement[] = [{ code: CODE_ALT_CONTROL, val: 1 }];
+    this.sometimesUHaveToSendIt(content);
+  }
+
   hanldeAltHoldPressed = () => {
-    if (this.state.altHoldIcon === 'md-arrow-round-up') {
-      this.setState({
-        altHoldText: 'ALT HOLD OFF',
-        altHoldIcon: 'md-pause'
-      });
+    if (this.state.altHoldIcon === "md-arrow-round-up") {
+      this.stopAltHold();
     } else {
-      this.setState({
-        altHoldText: 'ALT HOLD ON',
-        altHoldIcon: 'md-arrow-round-up'
-      });
+      this.activateAltHold();
     }
   };
 }
@@ -165,25 +242,25 @@ export default Fly;
 
 const styles = StyleSheet.create({
   container: {
-    height: '100%',
-    width: '100%',
-    justifyContent: 'center',
-    alignContent: 'center',
+    height: "100%",
+    width: "100%",
+    justifyContent: "center",
+    alignContent: "center",
     padding: 20
   },
   altHoldContainer: {
-    flexDirection: 'column',
-    position: 'absolute',
+    flexDirection: "column",
+    position: "absolute",
     top: 80,
     right: -50,
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    justifyContent: "flex-start",
+    alignItems: "center"
   },
   altHoldTxt: {
     fontFamily: Fonts.Roboto.bold,
     width: 160,
-    transform: [{ rotate: '90deg' }],
-    color: 'black'
+    transform: [{ rotate: "90deg" }],
+    color: "black"
   },
   altHoldIndicator: {
     width: 15,
@@ -192,14 +269,14 @@ const styles = StyleSheet.create({
     marginTop: 45
   },
   buttonsContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    position: 'absolute',
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100%",
+    position: "absolute",
     marginLeft: 20
   },
   manFlightButton: {
-    transform: [{ rotate: '90deg' }],
+    transform: [{ rotate: "90deg" }],
     margin: 10,
     width: 70
   }

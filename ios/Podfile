@@ -8,5 +8,6 @@ target 'OpenDrone' do
   # use_frameworks!
 
   # Pods for OpenDrone
+  pod 'TcpSockets', :path => '../node_modules/react-native-tcp'
 
 end

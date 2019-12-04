@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {
   View,
   Text,
@@ -10,30 +10,26 @@ import {
   TextInput,
   KeyboardAvoidingView,
   Animated
-} from 'react-native';
-import { IFlightplan } from '../models/IFlightplan';
-import colors from '../colors';
-import { Fonts } from '../fonts';
-import Icon from 'react-native-vector-icons/Ionicons';
-import Toast, { DURATION } from 'react-native-easy-toast';
-import { IWaypoint } from '../models/IWaypoint';
-import Map from '../components/Map';
-import Background from '../components/Background';
-import SlidingUpPanel from 'rn-sliding-up-panel';
-import { Marker, Region, MapEvent } from 'react-native-maps';
-import {
-  DEFAULT_LATITUDE,
-  DEFAULT_LONGITUDE,
-  DEFAULT_LATLNG,
-  DEFAULT_REGION
-} from '../defaults';
-import CustomMarker from '../components/CustomMarker';
-import FlightPlanDetailTopBtn from '../components/FlightPlanDetailTopBtn';
+} from "react-native";
+import { IFlightplan } from "../models/IFlightplan";
+import colors from "../colors";
+import { Fonts } from "../fonts";
+import Icon from "react-native-vector-icons/Ionicons";
+import Toast, { DURATION } from "react-native-easy-toast";
+import { IWaypoint } from "../models/IWaypoint";
+import Map from "../components/Map";
+import Background from "../components/Background";
+import SlidingUpPanel from "rn-sliding-up-panel";
+import { Marker, Region, MapEvent } from "react-native-maps";
+import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE, DEFAULT_LATLNG, DEFAULT_REGION } from "../defaults";
+import CustomMarker from "../components/CustomMarker";
+import FlightPlanDetailTopBtn from "../components/FlightPlanDetailTopBtn";
 
 interface Props {
   navigation: {
     getParam(key, defValue): {};
     goBack();
+    navigate(path, params): {};
   };
   draggableRange: {
     top: number;
@@ -73,7 +69,7 @@ class FlightplanDetails extends Component<Props, State> {
   constructor(props) {
     super(props);
     const { navigation } = this.props;
-    const flightplan = navigation.getParam('flightplan', {}) as IFlightplan;
+    const flightplan = navigation.getParam("flightplan", {}) as IFlightplan;
     this.state = {
       flightplan: flightplan,
       selectedWaypoint: {
@@ -82,7 +78,7 @@ class FlightplanDetails extends Component<Props, State> {
       selectedIndex: -1,
       correctKeyboard: false,
       allowDragging: true,
-      pointerEvents: 'none',
+      pointerEvents: "none",
       editedTitle: flightplan.name,
       editedDesc: flightplan.description,
       titleHeight: 0,
@@ -97,125 +93,81 @@ class FlightplanDetails extends Component<Props, State> {
     const draggedValue = this._draggedValue.interpolate({
       inputRange: [bottom, top],
       outputRange: [0, 1],
-      extrapolate: 'clamp'
+      extrapolate: "clamp"
     });
 
     const transform = [{ scale: draggedValue }];
     const { goBack } = this.props.navigation;
     return (
-      <SafeAreaView
-        style={{ width: '100%', height: '100%', backgroundColor: 'white' }}
-      >
+      <SafeAreaView style={{ width: "100%", height: "100%", backgroundColor: "white" }}>
         <Background />
         <View style={styles.container}>
-          <FlightPlanDetailTopBtn text='back' onPress={() => goBack()} />
-
-          <Animated.View
-            style={[styles.globalActionContainer, { top: this.state.saveTop }]}
-          >
-            <FlightPlanDetailTopBtn
-              text='save'
-              onPress={() => this.saveTitleAndDesc()}
-            />
-            <FlightPlanDetailTopBtn text='reset' onPress={() => this.reset()} />
+          <FlightPlanDetailTopBtn text="back" onPress={() => goBack()} />
+          <Animated.View style={[styles.globalActionContainer, { top: this.state.saveTop }]}>
+            <FlightPlanDetailTopBtn text="save" onPress={() => this.saveTitleAndDesc()} />
+            <FlightPlanDetailTopBtn text="reset" onPress={() => this.reset()} />
           </Animated.View>
           <TextInput
-            style={[
-              styles.nameTxt,
-              { height: Math.max(35, this.state.titleHeight) }
-            ]}
+            style={[styles.nameTxt, { height: Math.max(35, this.state.titleHeight) }]}
             value={this.state.editedTitle}
-            placeholder='title'
+            placeholder="title"
             multiline={true}
-            onContentSizeChange={(event) => {
+            onContentSizeChange={event => {
               this.setState({
                 titleHeight: event.nativeEvent.contentSize.height
               });
             }}
-            onChangeText={(text) => this.handleTitleEdited(text)}
+            onChangeText={text => this.handleTitleEdited(text)}
           />
           <TextInput
-            style={[
-              styles.descriptionTxt,
-              { height: Math.max(35, this.state.descHeight) }
-            ]}
+            style={[styles.descriptionTxt, { height: Math.max(35, this.state.descHeight) }]}
             value={this.state.editedDesc}
-            placeholder='description'
+            placeholder="description"
             multiline={true}
-            onContentSizeChange={(event) => {
+            onContentSizeChange={event => {
               this.setState({
                 descHeight: event.nativeEvent.contentSize.height
               });
             }}
-            onChangeText={(text) => this.handleDescriptionEdited(text)}
+            onChangeText={text => this.handleDescriptionEdited(text)}
           />
           <View style={{ marginTop: 20 }}>
             <View
               style={{
-                flexDirection: 'row',
-                justifyContent: 'space-between',
-                alignItems: 'center'
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center"
               }}
             >
               <Text style={styles.routeTxt}>Route:</Text>
-              <TouchableOpacity
-                activeOpacity={0.5}
-                onPress={() => this.showOnMap()}
-              >
+              <TouchableOpacity activeOpacity={0.5} onPress={() => this.showOnMap()}>
                 <Text style={styles.viewMapTxt}>VIEW MAP</Text>
               </TouchableOpacity>
             </View>
             {this.state.flightplan.waypoints.map((waypoint, index) => (
               <View key={index} style={[styles.markerContainer]}>
                 <View style={styles.locationContainer}>
-                  <Icon
-                    name='md-pin'
-                    color={colors.primaryColor}
-                    size={24}
-                    style={{ marginRight: 10 }}
-                  />
+                  <Icon name="md-pin" color={colors.primaryColor} size={24} style={{ marginRight: 10 }} />
                   <View style={styles.latlngContainer}>
-                    <Text style={styles.latlngTxt}>
-                      LAT: {waypoint.location.latitude}
-                    </Text>
-                    <Text style={styles.latlngTxt}>
-                      LNG: {waypoint.location.longitude}
-                    </Text>
+                    <Text style={styles.latlngTxt}>LAT: {waypoint.location.latitude}</Text>
+                    <Text style={styles.latlngTxt}>LNG: {waypoint.location.longitude}</Text>
                   </View>
                 </View>
                 <View
                   style={{
-                    flexDirection: 'row',
-                    justifyContent: 'space-evenly',
-                    alignItems: 'center'
+                    flexDirection: "row",
+                    justifyContent: "space-evenly",
+                    alignItems: "center"
                   }}
                 >
-                  <TouchableOpacity
-                    activeOpacity={0.5}
-                    onPress={() => this.showEditLocation(waypoint, index)}
-                  >
-                    <Icon
-                      name='md-create'
-                      color={colors.primaryColor}
-                      size={24}
-                      style={{ marginRight: 10 }}
-                    />
+                  <TouchableOpacity activeOpacity={0.5} onPress={() => this.showEditLocation(waypoint, index)}>
+                    <Icon name="md-create" color={colors.primaryColor} size={24} style={{ marginRight: 10 }} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     activeOpacity={0.5}
-                    onPress={() =>
-                      this.copyToClipboard(
-                        waypoint.location.latitude,
-                        waypoint.location.longitude
-                      )
-                    }
+                    onPress={() => this.copyToClipboard(waypoint.location.latitude, waypoint.location.longitude)}
                   >
-                    <Icon
-                      name='md-copy'
-                      color={colors.primaryColor}
-                      size={24}
-                      style={{ marginRight: 10 }}
-                    />
+                    <Icon name="md-copy" color={colors.primaryColor} size={24} style={{ marginRight: 10 }} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -223,10 +175,10 @@ class FlightplanDetails extends Component<Props, State> {
           </View>
           <SlidingUpPanel
             showBackdrop={false}
-            ref={(c) => (this._panel = c)}
+            ref={c => (this._panel = c)}
             draggableRange={this.props.draggableRange}
             animatedValue={this._draggedValue}
-            onDragStart={() => this.setState({ pointerEvents: 'none' })}
+            onDragStart={() => this.setState({ pointerEvents: "none" })}
             onDragEnd={() => this.setState({ pointerEvents: null })}
             allowDragging={this.state.allowDragging}
           >
@@ -236,11 +188,11 @@ class FlightplanDetails extends Component<Props, State> {
             </View>
           </SlidingUpPanel>
           <Toast
-            ref='toast'
+            ref="toast"
             opacity={1}
             positionValue={160}
             style={{
-              backgroundColor: '#e5e5e5',
+              backgroundColor: "#e5e5e5",
               borderRadius: 20
             }}
             textStyle={{
@@ -258,9 +210,7 @@ class FlightplanDetails extends Component<Props, State> {
       <View style={styles.panelHeader}>
         <View style={styles.upslider} />
         {this.state.selectedIndex >= 0 ? (
-          <Text style={styles.upDrawerTxt}>
-            {`edit waypoint #${this.state.selectedIndex}`}
-          </Text>
+          <Text style={styles.upDrawerTxt}>{`edit waypoint #${this.state.selectedIndex}`}</Text>
         ) : (
           <Text style={styles.upDrawerTxt}>select a waypoint to edit</Text>
         )}
@@ -272,7 +222,8 @@ class FlightplanDetails extends Component<Props, State> {
     return (
       <View style={styles.bottomDrawerContent}>
         <View
-          style={{ height: 200, width: '100%', overflow: 'hidden' }}
+          style={{ height: 200, width: "100%", overflow: "hidden" }}
+          //@ts-ignore
           pointerEvents={this.state.pointerEvents}
           onMoveShouldSetResponder={() => {
             this.setState({ allowDragging: false });
@@ -282,18 +233,13 @@ class FlightplanDetails extends Component<Props, State> {
           onResponderRelease={() => this.setState({ allowDragging: true })}
         >
           <Map
-            ref={(c) => (this.map = c)}
+            ref={c => (this.map = c)}
             latitude={this.state.selectedWaypoint.location.latitude}
             longitude={this.state.selectedWaypoint.location.longitude}
-            onPress={(event) => this.onPress(event)}
+            onPress={event => this.onPress(event)}
           >
             <Marker coordinate={this.state.selectedWaypoint.location}>
-              <Icon
-                name='md-pin'
-                color={colors.primaryColor}
-                size={24}
-                style={{ marginRight: 10 }}
-              />
+              <Icon name="md-pin" color={colors.primaryColor} size={24} style={{ marginRight: 10 }} />
             </Marker>
           </Map>
         </View>
@@ -302,7 +248,7 @@ class FlightplanDetails extends Component<Props, State> {
             <Text style={styles.coordinateLabel}>LATITUDE: </Text>
             <TextInput
               style={styles.coordinateInput}
-              onChangeText={(text) => this.handleLatTyped(text)}
+              onChangeText={text => this.handleLatTyped(text)}
               value={`${this.state.selectedWaypoint.location.latitude}`}
             />
           </View>
@@ -310,25 +256,15 @@ class FlightplanDetails extends Component<Props, State> {
             <Text style={styles.coordinateLabel}>LONGITUDE: </Text>
             <TextInput
               style={styles.coordinateInput}
-              onChangeText={(text) => this.handleLngTyped(text)}
+              onChangeText={text => this.handleLngTyped(text)}
               value={`${this.state.selectedWaypoint.location.longitude}`}
             />
           </View>
           <View style={styles.panelActionContainer}>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => this.save()}
-              style={styles.sliderActionContainer}
-            >
-              <Text style={styles.sliderActionTxt}>
-                {this.state.selectedIndex >= 0 ? `SAVE` : `ADD NEW`}
-              </Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={() => this.save()} style={styles.sliderActionContainer}>
+              <Text style={styles.sliderActionTxt}>{this.state.selectedIndex >= 0 ? `SAVE` : `ADD NEW`}</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => this.cancel()}
-              style={styles.sliderActionContainer}
-            >
+            <TouchableOpacity activeOpacity={0.5} onPress={() => this.cancel()} style={styles.sliderActionContainer}>
               <Text style={styles.sliderActionTxt}>CANCEL</Text>
             </TouchableOpacity>
           </View>
@@ -339,7 +275,7 @@ class FlightplanDetails extends Component<Props, State> {
 
   saveTitleAndDesc = () => {
     if (this.state.editedTitle.length <= 0) {
-      this.showToast('Please enter a title');
+      this.showToast("Please enter a title");
       Animated.timing(this.state.saveTop, {
         toValue: 5,
         duration: 50
@@ -417,7 +353,11 @@ class FlightplanDetails extends Component<Props, State> {
     const selectedWaypoint = this.state.selectedWaypoint;
     const selectedIndex = this.state.selectedIndex;
     const flightplan = this.state.flightplan;
-    flightplan.waypoints[selectedIndex] = selectedWaypoint;
+    if (selectedIndex < 0) {
+      flightplan.waypoints.push(selectedWaypoint);
+    } else {
+      flightplan.waypoints[selectedIndex] = selectedWaypoint;
+    }
     this.setState({
       flightplan: flightplan,
       selectedIndex: -1,
@@ -426,7 +366,7 @@ class FlightplanDetails extends Component<Props, State> {
   }
 
   showLatInputCorrectly(isFocused) {
-    console.log('latinput');
+    console.log("latinput");
     this.setState({
       correctKeyboard: isFocused
     });
@@ -434,7 +374,7 @@ class FlightplanDetails extends Component<Props, State> {
 
   handleLatTyped(text: string) {
     if (!text) {
-      text = '0';
+      text = "0";
     }
     const parsedText = parseFloat(text);
     if (!isNaN(parsedText)) {
@@ -464,15 +404,21 @@ class FlightplanDetails extends Component<Props, State> {
     this.map.mapView.animateToRegion(region);
   }
 
-  showOnMap() {}
+  showOnMap = () => {
+    console.log(this.state.flightplan.waypoints);
+    this.props.navigation.navigate("FlightplanMap", {
+      waypoints: this.state.flightplan.waypoints
+    });
+  };
 
   showToast(text: string) {
+    //@ts-ignore
     this.refs.toast.show(text, DURATION.LENGTH_SHORT);
   }
 
   copyToClipboard(lat: number, lng: number) {
     Clipboard.setString(`${lat},${lng}`);
-    this.showToast('Copied to clipboard');
+    this.showToast("Copied to clipboard");
   }
 }
 export default FlightplanDetails;
@@ -484,10 +430,10 @@ const styles = StyleSheet.create({
     paddingRight: 20
   },
   nameTxt: {
-    color: 'black',
+    color: "black",
     fontSize: 40,
     fontFamily: Fonts.Roboto.bold,
-    width: '100%',
+    width: "100%",
     margin: 0
   },
   descriptionTxt: {
@@ -500,73 +446,73 @@ const styles = StyleSheet.create({
   routeTxt: {
     fontFamily: Fonts.Roboto.bold,
     fontSize: 15,
-    color: 'black',
-    textTransform: 'uppercase'
+    color: "black",
+    textTransform: "uppercase"
   },
   markerContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     margin: 5
   },
   locationContainer: {
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    alignItems: "center"
   },
   latlngContainer: {
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start'
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start"
   },
   latlngTxt: {
     color: colors.notQuiteBlack,
     fontFamily: Fonts.Roboto.medium
   },
   bottomDrawerContent: {
-    width: '100%',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    height: '100%',
+    width: "100%",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    height: "100%",
     paddingVertical: 10
   },
   upslider: {
     width: 40,
-    backgroundColor: 'grey',
+    backgroundColor: "grey",
     height: 5,
     borderRadius: 10,
     marginTop: 10
   },
   upDrawerTxt: {
-    color: 'black',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
     marginVertical: 10,
-    textTransform: 'uppercase',
+    textTransform: "uppercase",
     fontSize: 12,
     letterSpacing: 3,
     fontFamily: Fonts.Roboto.bold
   },
   latStyle: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     height: 20,
-    backgroundColor: 'red',
+    backgroundColor: "red",
     top: -300,
     margin: 10
   },
   panel: {
     flex: 1,
-    backgroundColor: 'white',
-    position: 'relative',
+    backgroundColor: "white",
+    position: "relative",
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     elevation: 4
   },
   panelHeader: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center'
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center"
   },
   viewMapTxt: {
     fontFamily: Fonts.Roboto.bold,
@@ -583,48 +529,48 @@ const styles = StyleSheet.create({
     borderRadius: 35,
     width: 80,
     height: 35,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     margin: 10
   },
   panelActionContainer: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%'
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    width: "100%"
   },
   coordinateInput: {
     borderWidth: 0,
     fontSize: 14,
     flex: 1,
     fontFamily: Fonts.Roboto.bold,
-    color: 'black'
+    color: "black"
   },
   coordinateLabel: {
     fontFamily: Fonts.Roboto.bold,
     fontSize: 14,
-    color: 'black',
+    color: "black",
     width: 100
   },
   coordinateEditContainer: {
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    flexDirection: 'row'
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flexDirection: "row"
   },
   underMapContainer: {
-    width: '100%',
-    height: '100%',
-    flexDirection: 'column',
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
+    width: "100%",
+    height: "100%",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    alignItems: "flex-start",
     padding: 5
   },
   globalActionContainer: {
-    position: 'absolute',
+    position: "absolute",
     right: 0,
-    justifyContent: 'center',
-    alignItems: 'center',
-    flexDirection: 'row',
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
     marginRight: 10
   }
 });

@@ -24,9 +24,9 @@ import {
   CODE_ARM,
   CODE_ALT_CONTROL,
   CODE_GO_HOME
-} from "../components/communication/Codes";
-import CommunicationManager from "../components/communication/CommunicationManager";
-import { OpenDroneFrame } from "../components/communication/OpenDroneFrame";
+} from "../components/communication/opendrone/Codes";
+import CommunicationManager from "../components/communication/opendrone/CommunicationManager";
+import { OpenDroneFrame } from "../components/communication/opendrone/OpenDroneFrame";
 
 const communicationManager = CommunicationManager.getInstance(IP, PORT);
 

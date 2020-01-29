@@ -9,14 +9,20 @@
           <set>
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/../node_modules/appcenter-analytics/android" />
+            <option value="$PROJECT_DIR$/../node_modules/appcenter-crashes/android" />
+            <option value="$PROJECT_DIR$/../node_modules/appcenter/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-gesture-handler/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-maps/lib/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-radial-gradient/android" />
+            <option value="$PROJECT_DIR$/../node_modules/react-native-tcp/android" />
+            <option value="$PROJECT_DIR$/../node_modules/react-native-udp/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-vector-icons/android" />
             <option value="$PROJECT_DIR$/../node_modules/react-native-webview/android" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
+        <option name="testRunner" value="PLATFORM" />
       </GradleProjectSettings>
     </option>
   </component>

@@ -1,4 +1,4 @@
-import { IStickMovement } from "../../models/IStickMovement";
+import { IStickMovement } from "../../../models/IStickMovement";
 
 export class OpenDroneFrame {
   values: IStickMovement[];

@@ -1,0 +1,1 @@
+export const MAVLINK_ENABLED = "MAVLINK_ENABLED"

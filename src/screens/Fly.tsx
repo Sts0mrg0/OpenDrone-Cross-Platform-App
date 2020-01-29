@@ -1,5 +1,14 @@
 import React, { Component } from "react";
-import { View, Dimensions, Text, WebView, SafeAreaView, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Dimensions,
+  Text,
+  WebView,
+  SafeAreaView,
+  TouchableOpacity,
+  StyleSheet,
+  AsyncStorage
+} from "react-native";
 
 import RNGamePadDual from "../components/game-pad/dual/dual-joystick";
 import colors from "../colors";
@@ -27,8 +36,11 @@ import {
 } from "../components/communication/opendrone/Codes";
 import CommunicationManager from "../components/communication/opendrone/CommunicationManager";
 import { OpenDroneFrame } from "../components/communication/opendrone/OpenDroneFrame";
+import { OpenDroneController } from "../components/communication/opendrone/OpenDroneController";
+import { IController } from "../components/communication/IController";
+import { MAVLINK_ENABLED } from "../utils/StorageCodes";
 
-const communicationManager = CommunicationManager.getInstance(IP, PORT);
+let controller: IController;
 
 interface Props {}
 interface State {
@@ -56,6 +68,15 @@ class Fly extends React.Component<Props, State> {
       stickTouchedBottom: false,
       isArmed: false
     };
+  }
+
+  async viewDidLoad() {
+    const isMavLinkEnabled = await this.isMavLinkEnabled();
+    if (isMavLinkEnabled) {
+      controller = null;
+    } else {
+      controller = new OpenDroneController(IP, PORT);
+    }
   }
 
   render() {
@@ -112,16 +133,26 @@ class Fly extends React.Component<Props, State> {
     );
   }
 
-  handleGoHome() {
-    const values: IStickMovement[] = [{ code: CODE_GO_HOME, val: 1 }];
-    this.sometimesUHaveToSendIt(values);
+  async isMavLinkEnabled(): Promise<boolean> {
+    try {
+      const value = await AsyncStorage.getItem(MAVLINK_ENABLED);
+      if (value !== null) {
+        // We have data!!
+        const enabled = JSON.parse(value) as boolean;
+        return enabled;
+        return;
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+    return false;
   }
 
-  sometimesUHaveToSendIt(values: IStickMovement[]) {
-    const frame = new OpenDroneFrame(values);
-    const frameStr = frame.toString();
-    console.log(frameStr);
-    communicationManager.sendMessage(frameStr);
+  handleGoHome() {
+    if (!controller) {
+      return;
+    }
+    controller.sendGoHome();
   }
 
   handleOnRightMove = (evt, data) => {
@@ -129,7 +160,10 @@ class Fly extends React.Component<Props, State> {
     const distance = data.distance;
     const values = this.handleStickMove(rad, distance, false, MAX_DIRECTION_VALUE, MIN_DIRECTION_VALUE);
     if (this.state.stickTouchedBottom && this.state.isArmed) {
-      this.sometimesUHaveToSendIt(values);
+      if (!controller) {
+        return;
+      }
+      controller.sendRightStick(values);
     }
   };
 
@@ -138,7 +172,10 @@ class Fly extends React.Component<Props, State> {
     const distance = data.distance;
     const values = this.handleStickMove(rad, distance, true, MAX_MOTOR_VALUE, MIN_MOTOR_VALUE);
     if (this.state.stickTouchedBottom && this.state.isArmed) {
-      this.sometimesUHaveToSendIt(values);
+      if (!controller) {
+        return;
+      }
+      controller.sendLeftStick(values);
     }
   };
 
@@ -193,8 +230,11 @@ class Fly extends React.Component<Props, State> {
   };
 
   doArm() {
-    const values: IStickMovement[] = [{ code: CODE_ARM, val: 1 }];
-    this.sometimesUHaveToSendIt(values);
+    if (!controller) {
+      return;
+    }
+    controller.sendArm();
+
     this.setState({
       armText: "STOP",
       armIcon: "md-hand",
@@ -203,8 +243,11 @@ class Fly extends React.Component<Props, State> {
   }
 
   doUnarm() {
-    const values: IStickMovement[] = [{ code: CODE_ARM, val: 1 }];
-    this.sometimesUHaveToSendIt(values);
+    if (!controller) {
+      return;
+    }
+    controller.sendDisarm();
+
     this.setState({
       armText: "ARM",
       armIcon: "md-sync",
@@ -217,8 +260,11 @@ class Fly extends React.Component<Props, State> {
       altHoldText: "ALT HOLD ON",
       altHoldIcon: "md-arrow-round-up"
     });
-    const content: IStickMovement[] = [{ code: CODE_ALT_CONTROL, val: 1 }];
-    this.sometimesUHaveToSendIt(content);
+
+    if (!controller) {
+      return;
+    }
+    controller.sendActivateAltHold();
   }
 
   stopAltHold() {
@@ -226,8 +272,11 @@ class Fly extends React.Component<Props, State> {
       altHoldText: "ALT HOLD OFF",
       altHoldIcon: "md-pause"
     });
-    const content: IStickMovement[] = [{ code: CODE_ALT_CONTROL, val: 1 }];
-    this.sometimesUHaveToSendIt(content);
+
+    if (!controller) {
+      return;
+    }
+    controller.sendStopAltHold();
   }
 
   hanldeAltHoldPressed = () => {

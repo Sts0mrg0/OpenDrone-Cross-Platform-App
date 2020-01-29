@@ -45,7 +45,6 @@ class Settings extends Component<Props, State> {
     this.setState({ mavLinkEnabled: newValue });
   }
 
-  //TODO
   async readSettings() {
     try {
       const value = await AsyncStorage.getItem(MAVLINK_ENABLED);
@@ -61,7 +60,6 @@ class Settings extends Component<Props, State> {
     }
   }
 
-  //TODO
   async saveMavLinkEnabled(enabled: boolean) {
     try {
       await AsyncStorage.setItem(MAVLINK_ENABLED, JSON.stringify(enabled));

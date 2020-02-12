@@ -39,10 +39,14 @@ import { OpenDroneFrame } from "../components/communication/opendrone/OpenDroneF
 import { OpenDroneController } from "../components/communication/opendrone/OpenDroneController";
 import { IController } from "../components/communication/IController";
 import { MAVLINK_ENABLED } from "../utils/StorageCodes";
+import { MavLinkController } from "../components/communication/mavlink/MavLinkController";
+import { NavigationEventSubscription } from "react-navigation";
 
 let controller: IController;
 
-interface Props {}
+interface Props {
+  navigation: any;
+}
 interface State {
   altHoldText: string;
   altHoldIcon: string;
@@ -58,6 +62,10 @@ const options = {
 };
 
 class Fly extends React.Component<Props, State> {
+  stopSendingHeartbeats = false;
+  didBlurSubscription: NavigationEventSubscription;
+  willFocusSubscription: NavigationEventSubscription;
+  interval: NodeJS.Timeout;
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -70,13 +78,26 @@ class Fly extends React.Component<Props, State> {
     };
   }
 
-  async viewDidLoad() {
-    const isMavLinkEnabled = await this.isMavLinkEnabled();
-    if (isMavLinkEnabled) {
-      controller = null;
-    } else {
-      controller = new OpenDroneController(IP, PORT);
-    }
+  async componentDidMount() {
+    //this.sendHeartbeats();
+    this.didBlurSubscription = this.props.navigation.addListener("didFocus", async payload => {
+      const isMavLinkEnabled = await this.isMavLinkEnabled();
+      if (isMavLinkEnabled) {
+        controller = new MavLinkController(IP, PORT);
+      } else {
+        controller = new OpenDroneController(IP, PORT);
+      }
+      this.interval = setInterval(() => this.sendHeartbeat(), 1000);
+    });
+
+    this.willFocusSubscription = this.props.navigation.addListener("didBlur", payload => {
+      clearInterval(this.interval);
+    });
+  }
+
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
+    this.didBlurSubscription.remove();
   }
 
   render() {
@@ -146,6 +167,13 @@ class Fly extends React.Component<Props, State> {
       console.log("error", error);
     }
     return false;
+  }
+
+  async sendHeartbeat() {
+    if (!controller) {
+      return;
+    }
+    controller.sendHeartbeat();
   }
 
   handleGoHome() {

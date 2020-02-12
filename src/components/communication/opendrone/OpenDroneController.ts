@@ -52,6 +52,10 @@ export class OpenDroneController implements IController {
     this.sometimesUHaveToSendIt(values);
   }
 
+  sendHeartbeat(): void {
+    //we don't do that here
+  }
+
   private sometimesUHaveToSendIt(values: IStickMovement[]) {
     const frame = new OpenDroneFrame(values);
     const frameStr = frame.toString();

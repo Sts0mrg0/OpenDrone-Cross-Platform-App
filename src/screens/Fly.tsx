@@ -285,14 +285,14 @@ class Fly extends React.Component<Props, State> {
 
   activateAltHold() {
     this.setState({
-      altHoldText: "ALT HOLD ON",
+      altHoldText: "TAKEOFF",
       altHoldIcon: "md-arrow-round-up"
     });
 
     if (!controller) {
       return;
     }
-    controller.sendActivateAltHold();
+    controller.sendTakeOff();
   }
 
   stopAltHold() {

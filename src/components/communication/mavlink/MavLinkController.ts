@@ -65,6 +65,10 @@ export class MavLinkController implements IController {
     this.communicationManager.sendAltHold();
   }
 
+  sendTakeOff(): void {
+    this.communicationManager.sendTakeOff();
+  }
+
   sendGoHome(): void {
     //not yet implemented
   }

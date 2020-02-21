@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e8242c20-ef54-41ee-aee0-0d5a39d4a087" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/communication/IController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/communication/IController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/communication/mavlink/MavLinkController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/communication/mavlink/MavLinkController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/components/communication/opendrone/OpenDroneController.ts" beforeDir="false" afterPath="$PROJECT_DIR$/../src/components/communication/opendrone/OpenDroneController.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../src/screens/Fly.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../src/screens/Fly.tsx" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -59,19 +61,17 @@
     </system>
   </component>
   <component name="FileEditorManager">
-    <leaf>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.gradle">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-163" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/build.gradle">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="198">
-              <caret line="104" column="23" lean-forward="true" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="36" />
+              <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="36" />
             </state>
           </provider>
         </entry>
@@ -100,14 +100,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="AndroidView">
         <subPane>
           <expand>
-            <path>
-              <item name="OpenDrone" type="1abcf292:AndroidViewProjectNode" />
-              <item name="android-app" type="feadf853:AndroidModuleNode" />
-            </path>
             <path>
               <item name="OpenDrone" type="1abcf292:AndroidViewProjectNode" />
               <item name="Gradle Scripts" type="ae0cef3a:AndroidBuildScriptsGroupNode" />
@@ -116,8 +111,9 @@
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
       <pane id="ProjectPane" />
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -371,6 +367,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1440" height="831" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="1" />
@@ -386,12 +383,12 @@
       <window_info anchor="bottom" id="Statistic" order="2" />
       <window_info anchor="bottom" id="Debug" order="3" />
       <window_info anchor="bottom" id="Terminal" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.50143063" side_tool="true" visible="true" weight="0.32882273" />
+      <window_info anchor="bottom" id="Event Log" order="5" sideWeight="0.5028612" side_tool="true" visible="true" weight="0.32882273" />
       <window_info anchor="bottom" id="Flutter Performance" order="6" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Logcat" order="8" />
       <window_info anchor="bottom" id="Android Profiler" order="9" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.49785408" weight="0.32882273" />
+      <window_info anchor="bottom" id="Build" order="10" sideWeight="0.49713877" weight="0.32882273" />
       <window_info anchor="right" id="Capture Analysis" order="0" />
       <window_info anchor="right" id="Gradle" order="1" visible="true" weight="0.3297568" />
       <window_info anchor="right" id="Theme Preview" order="2" />
@@ -403,14 +400,12 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-163" />
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/app/build.gradle">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
-          <caret line="104" column="23" lean-forward="true" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="36" />
+          <caret line="104" column="23" selection-start-line="104" selection-start-column="23" selection-end-line="104" selection-end-column="36" />
         </state>
       </provider>
     </entry>

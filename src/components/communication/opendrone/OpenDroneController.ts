@@ -56,6 +56,9 @@ export class OpenDroneController implements IController {
     //we don't do that here
   }
 
+  sendTakeOff(): void {
+    this.sendActivateAltHold();
+  }
   private sometimesUHaveToSendIt(values: IStickMovement[]) {
     const frame = new OpenDroneFrame(values);
     const frameStr = frame.toString();

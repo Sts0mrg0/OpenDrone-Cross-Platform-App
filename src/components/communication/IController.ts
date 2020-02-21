@@ -9,4 +9,5 @@ export interface IController {
   sendStopAltHold(): void;
   sendGoHome(): void;
   sendHeartbeat(): void;
+  sendTakeOff(): void;
 }

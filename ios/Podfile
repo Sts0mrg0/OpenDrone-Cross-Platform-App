@@ -16,4 +16,6 @@ target 'OpenDrone' do
   platform :ios, '9.0'
   pod 'react-native-udp', :path => '../node_modules/react-native-udp'
 
+  pod 'react-native-image-picker', :path => '../node_modules/react-native-image-picker'
+
 end

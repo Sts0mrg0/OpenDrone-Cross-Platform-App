@@ -14,7 +14,7 @@ class Settings extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      mavLinkEnabled: false
+      mavLinkEnabled: false,
     };
   }
 
@@ -25,16 +25,23 @@ class Settings extends Component<Props, State> {
   render() {
     return (
       <View style={styles.container}>
-        <View style={{ flexDirection: "column", justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ color: colors.notQuiteBlack, fontFamily: Fonts.Roboto.bold, fontSize: 14 }}>
-            Enable MavLink
-          </Text>
+        <Text style={styles.settingsHeading}>Settings</Text>
+        <View style={styles.settingsItem}>
+          <Text style={styles.settingsItemTitle}>Enable MavLink</Text>
           <Switch
             value={this.state.mavLinkEnabled}
-            onValueChange={value => {
+            onValueChange={(value) => {
               this.handleMavlinkEnabledChanged(value);
             }}
           ></Switch>
+        </View>
+        <View style={styles.settingsItem}>
+          <Text style={styles.settingsItemTitle}>Language</Text>
+          <Text style={styles.settingsItemValue}>English</Text>
+        </View>
+        <View style={styles.settingsItem}>
+          <Text style={styles.settingsItemTitle}>Version</Text>
+          <Text style={styles.settingsItemValue}>1.1.0</Text>
         </View>
       </View>
     );
@@ -73,7 +80,18 @@ export default Settings;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
+    padding: 10,
+  },
+  settingsItem: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center"
-  }
+    width: "100%",
+    marginTop: 20,
+  },
+  settingsHeading: { fontSize: 30, fontFamily: Fonts.Roboto.bold, color: colors.notQuiteBlack },
+  settingsItemTitle: { color: colors.notQuiteBlack, fontFamily: Fonts.Roboto.medium, fontSize: 16 },
+  settingsItemValue: { fontFamily: Fonts.Roboto.regular },
 });

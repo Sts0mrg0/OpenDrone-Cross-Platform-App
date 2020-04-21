@@ -7,7 +7,8 @@ import {
   SafeAreaView,
   TouchableOpacity,
   StyleSheet,
-  AsyncStorage
+  AsyncStorage,
+  PermissionsAndroid,
 } from "react-native";
 
 import RNGamePadDual from "../components/game-pad/dual/dual-joystick";
@@ -22,7 +23,7 @@ import {
   MAX_MOTOR_VALUE,
   MIN_MOTOR_VALUE,
   PORT,
-  IP
+  IP,
 } from "../utils/OpenDroneUtils";
 import { IStickMovement } from "../models/IStickMovement";
 import {
@@ -32,7 +33,7 @@ import {
   CODE_PITCH,
   CODE_ARM,
   CODE_ALT_CONTROL,
-  CODE_GO_HOME
+  CODE_GO_HOME,
 } from "../components/communication/opendrone/Codes";
 import CommunicationManager from "../components/communication/opendrone/CommunicationManager";
 import { OpenDroneFrame } from "../components/communication/opendrone/OpenDroneFrame";
@@ -41,11 +42,21 @@ import { IController } from "../components/communication/IController";
 import { MAVLINK_ENABLED } from "../utils/StorageCodes";
 import { MavLinkController } from "../components/communication/mavlink/MavLinkController";
 import { NavigationEventSubscription } from "react-navigation";
+import Map from "../components/Map";
+import { LatLng, Polyline } from "react-native-maps";
+import { DEFAULT_LATITUDE, DEFAULT_LATLNG } from "../defaults";
+import { IFlightplan } from "../models/IFlightplan";
+import { IWaypoint } from "../models/IWaypoint";
+import YellowMarker from "../components/map/YellowMarker";
 
 let controller: IController;
 
 interface Props {
-  navigation: any;
+  navigation: {
+    getParam(key: string, defValue?): {};
+    goBack();
+    navigate(path: string, params: {}): {};
+  };
 }
 interface State {
   altHoldText: string;
@@ -54,11 +65,18 @@ interface State {
   armIcon: string;
   stickTouchedBottom: boolean;
   isArmed: boolean;
+  userLocation: LatLng;
+  selectedFlightplan: IFlightplan;
 }
 
 const options = {
   color: colors.notQuiteBlack,
-  size: 500
+  size: 500,
+};
+
+const DEFAULT_LOCATION = {
+  latitude: 48.3209538,
+  longitude: 14.5838411,
 };
 
 class Fly extends React.Component<Props, State> {
@@ -66,21 +84,26 @@ class Fly extends React.Component<Props, State> {
   didBlurSubscription: NavigationEventSubscription;
   willFocusSubscription: NavigationEventSubscription;
   interval: NodeJS.Timeout;
+  mapView: Map | null = null;
+
   constructor(props: Props) {
     super(props);
+    const selectedFlightplan = this.props.navigation.getParam("selectedFlightplan", {}) as IFlightplan;
     this.state = {
       altHoldText: "ALT HOLD ON",
       altHoldIcon: "md-arrow-round-up",
       armText: "ARM",
       armIcon: "md-sync",
       stickTouchedBottom: false,
-      isArmed: false
+      isArmed: false,
+      userLocation: DEFAULT_LOCATION,
+      selectedFlightplan: selectedFlightplan,
     };
   }
 
   async componentDidMount() {
     //this.sendHeartbeats();
-    this.didBlurSubscription = this.props.navigation.addListener("didFocus", async payload => {
+    this.didBlurSubscription = this.props.navigation.addListener("didFocus", async (payload) => {
       const isMavLinkEnabled = await this.isMavLinkEnabled();
       if (isMavLinkEnabled) {
         controller = new MavLinkController(IP, PORT);
@@ -90,7 +113,7 @@ class Fly extends React.Component<Props, State> {
       this.interval = setInterval(() => this.sendHeartbeat(), 1000);
     });
 
-    this.willFocusSubscription = this.props.navigation.addListener("didBlur", payload => {
+    this.willFocusSubscription = this.props.navigation.addListener("didBlur", (payload) => {
       clearInterval(this.interval);
     });
   }
@@ -101,8 +124,28 @@ class Fly extends React.Component<Props, State> {
   }
 
   render() {
+    const userLocation = this.state.userLocation;
     return (
       <SafeAreaView style={{ flex: 1 }}>
+        <Map
+          style={{ width: "100%", height: "100%", position: "absolute" }}
+          latitude={userLocation.latitude}
+          longitude={userLocation.longitude}
+          ref={(c) => (this.mapView = c)}
+        >
+          {this.state.selectedFlightplan.waypoints &&
+            this.state.selectedFlightplan.waypoints.map((waypoint, flightplan) => {
+              <YellowMarker coordinate={waypoint.location} />;
+            })}
+
+          {this.state.selectedFlightplan.waypoints && (
+            <Polyline
+              coordinates={this.state.selectedFlightplan.waypoints.map((waypoint) => waypoint.location)}
+              strokeColor={colors.primaryColor}
+              strokeWidth={4}
+            />
+          )}
+        </Map>
         <View style={styles.container}>
           <RNGamePadDual
             style={{ width: "50%", height: "50%" }}
@@ -119,8 +162,8 @@ class Fly extends React.Component<Props, State> {
               style={[
                 styles.altHoldIndicator,
                 {
-                  backgroundColor: this.state.altHoldIcon === "md-pause" ? "#27ae60" : "#c0392b"
-                }
+                  backgroundColor: this.state.altHoldIcon === "md-pause" ? "#27ae60" : "#c0392b",
+                },
               ]}
             />
           </View>
@@ -136,7 +179,7 @@ class Fly extends React.Component<Props, State> {
               style={{
                 transform: [{ rotate: "90deg" }],
                 margin: 10,
-                width: 70
+                width: 70,
               }}
               text={this.state.altHoldText}
               onPress={() => this.hanldeAltHoldPressed()}
@@ -151,6 +194,52 @@ class Fly extends React.Component<Props, State> {
           </View>
         </View>
       </SafeAreaView>
+    );
+  }
+
+  animateToCoords(coordinates: LatLng) {
+    if (this.mapView) {
+      this.mapView.animateToCoordinate(coordinates);
+    }
+  }
+
+  async requestLocationPermission() {
+    try {
+      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION, {
+        title: "OpenDrone braucht deine Position",
+        message: "Um OpenDrone in vollem Umfang benutzen zu können, benötigen wir deine Position",
+        buttonNeutral: "Später",
+        buttonNegative: "Abbrechen",
+        buttonPositive: "OK",
+      });
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        this.getUserPosition();
+      } else {
+        this.animateToCoords(this.state.userLocation);
+      }
+    } catch (err) {
+      this.animateToCoords(this.state.userLocation);
+    }
+  }
+
+  getUserPosition() {
+    navigator.geolocation.requestAuthorization();
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        /*const userLocation: LatLng = position.coords;
+                this.setState({ userLocation });
+                this.animateToCoords(userLocation);*/
+      },
+      (error) => console.log(error),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
+    );
+
+    navigator.geolocation.watchPosition(
+      (position) => {
+        /*const userLocation: LatLng = position.coords;
+                this.setState({ userLocation });*/
+      },
+      (error) => console.log(error)
     );
   }
 
@@ -266,7 +355,7 @@ class Fly extends React.Component<Props, State> {
     this.setState({
       armText: "STOP",
       armIcon: "md-hand",
-      isArmed: true
+      isArmed: true,
     });
   }
 
@@ -279,14 +368,14 @@ class Fly extends React.Component<Props, State> {
     this.setState({
       armText: "ARM",
       armIcon: "md-sync",
-      isArmed: false
+      isArmed: false,
     });
   }
 
   activateAltHold() {
     this.setState({
       altHoldText: "TAKEOFF",
-      altHoldIcon: "md-arrow-round-up"
+      altHoldIcon: "md-arrow-round-up",
     });
 
     if (!controller) {
@@ -298,7 +387,7 @@ class Fly extends React.Component<Props, State> {
   stopAltHold() {
     this.setState({
       altHoldText: "ALT HOLD OFF",
-      altHoldIcon: "md-pause"
+      altHoldIcon: "md-pause",
     });
 
     if (!controller) {
@@ -323,7 +412,7 @@ const styles = StyleSheet.create({
     width: "100%",
     justifyContent: "center",
     alignContent: "center",
-    padding: 20
+    padding: 20,
   },
   altHoldContainer: {
     flexDirection: "column",
@@ -331,32 +420,32 @@ const styles = StyleSheet.create({
     top: 80,
     right: -50,
     justifyContent: "flex-start",
-    alignItems: "center"
+    alignItems: "center",
   },
   altHoldTxt: {
     fontFamily: Fonts.Roboto.bold,
     width: 160,
     transform: [{ rotate: "90deg" }],
-    color: "black"
+    color: "black",
   },
   altHoldIndicator: {
     width: 15,
     height: 15,
     borderRadius: 15,
-    marginTop: 45
+    marginTop: 45,
   },
   buttonsContainer: {
     justifyContent: "center",
     alignItems: "center",
     height: "100%",
     position: "absolute",
-    marginLeft: 20
+    marginLeft: 20,
   },
   manFlightButton: {
     transform: [{ rotate: "90deg" }],
     margin: 10,
-    width: 70
-  }
+    width: 70,
+  },
 });
 
 // <MapComponent latitude={LATITUDE} longitude={LONGITUDE} />

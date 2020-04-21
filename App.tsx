@@ -32,15 +32,15 @@ const TabNavigator = createBottomTabNavigator(
       screen: Home,
       navigationOptions: {
         tabBarLabel: "HOME",
-        tabBarIcon: ({ tintColor }) => <Icon name="md-planet" color={tintColor} size={24} />
-      }
+        tabBarIcon: ({ tintColor }) => <Icon name="md-planet" color={tintColor} size={24} />,
+      },
     },
     Flightplans: {
       screen: Flightplans,
       navigationOptions: {
         tabBarLabel: "FLIGHTPLANS",
-        tabBarIcon: ({ tintColor }) => <Icon name="md-map" color={tintColor} size={24} />
-      }
+        tabBarIcon: ({ tintColor }) => <Icon name="md-map" color={tintColor} size={24} />,
+      },
     },
     Fly: {
       screen: Fly,
@@ -55,28 +55,28 @@ const TabNavigator = createBottomTabNavigator(
               backgroundColor: colors.almostWhite,
               justifyContent: "space-around",
               alignItems: "center",
-              elevation: 4
+              elevation: 4,
             }}
           >
             <Icon name="md-jet" size={40} color={tintColor} />
           </View>
-        )
-      }
+        ),
+      },
     },
     Drones: {
       screen: Drones,
       navigationOptions: {
-        tabBarLabel: "DRONES",
-        tabBarIcon: ({ tintColor }) => <Icon name="md-apps" color={tintColor} size={24} />
-      }
+        tabBarLabel: "MY DRONE",
+        tabBarIcon: ({ tintColor }) => <Icon name="md-apps" color={tintColor} size={24} />,
+      },
     },
     Settings: {
       screen: Settings,
       navigationOptions: {
         tabBarLabel: "SETTINGS",
-        tabBarIcon: ({ tintColor }) => <Icon name="md-settings" color={tintColor} size={24} />
-      }
-    }
+        tabBarIcon: ({ tintColor }) => <Icon name="md-settings" color={tintColor} size={24} />,
+      },
+    },
   },
   {
     animationEnabled: true,
@@ -91,9 +91,9 @@ const TabNavigator = createBottomTabNavigator(
         shadowOffset: { width: 5, height: 3 },
         shadowColor: "black",
         shadowOpacity: 0.5,
-        elevation: 5
-      }
-    }
+        elevation: 5,
+      },
+    },
   }
 );
 
@@ -103,19 +103,19 @@ const StackNavigator = createStackNavigator(
       screen: TabNavigator,
       navigationOptions: {
         title: "OpenDrone",
-        header: null
-      }
+        header: null,
+      },
     },
     FlightplanDetails: {
-      screen: FlightplanDetails
+      screen: FlightplanDetails,
     },
     FlightplanMap: {
-      screen: FlightplanMap
-    }
+      screen: FlightplanMap,
+    },
   },
   {
     headerMode: "screen",
-    transitionConfig: nav => handleCustomTransitionStackNav(nav)
+    transitionConfig: (nav) => handleCustomTransitionStackNav(nav),
   }
 );
 

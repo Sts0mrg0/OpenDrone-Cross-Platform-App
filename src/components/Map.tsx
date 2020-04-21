@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
-import MapView, { MAP_TYPES, PROVIDER_DEFAULT, UrlTile, MapEvent } from "react-native-maps";
+import MapView, { MAP_TYPES, PROVIDER_DEFAULT, UrlTile, MapEvent, LatLng } from "react-native-maps";
 interface Props {
   provider?: any;
   latitude: number;
@@ -39,14 +39,18 @@ class Map extends React.Component<Props, State> {
         latitude: lat,
         longitude: lng,
         latitudeDelta: latDelta,
-        longitudeDelta: lngDelta
-      }
+        longitudeDelta: lngDelta,
+      },
     };
   }
 
   onMapLayout = () => {
     this.setState({ isMapReady: true });
   };
+
+  animateToCoordinate(coordinates: LatLng) {
+    this.mapView.animateToCoordinate(coordinates);
+  }
 
   get mapType() {
     return this.props.provider === PROVIDER_DEFAULT ? MAP_TYPES.STANDARD : MAP_TYPES.NONE;
@@ -55,7 +59,7 @@ class Map extends React.Component<Props, State> {
     console.log(this.state.region);
     return (
       <MapView
-        ref={c => (this.mapView = c)}
+        ref={(c) => (this.mapView = c)}
         initialRegion={this.state.region}
         provider={null}
         mapType={this.mapType}
@@ -66,13 +70,12 @@ class Map extends React.Component<Props, State> {
         liteMode={this.props.liteMode}
         onPress={
           this.props.onPress
-            ? event => this.props.onPress(event)
-            : event => {
+            ? (event) => this.props.onPress(event)
+            : (event) => {
                 console.log(event.nativeEvent.coordinate);
               }
         }
       >
-        <UrlTile urlTemplate="http://c.tile.openstreetmap.org/{z}/{x}/{y}.png" maximumZ={19} />
         {this.props.children}
       </MapView>
     );
@@ -85,6 +88,6 @@ const styles = StyleSheet.create({
     height: "125%",
     width: "125%",
     flex: 1,
-    position: "absolute"
-  }
+    position: "absolute",
+  },
 });

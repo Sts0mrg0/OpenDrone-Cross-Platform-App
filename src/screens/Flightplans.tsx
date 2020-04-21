@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, RefreshControl } from "react-native";
+import { View, Text, StyleSheet, SafeAreaView, ScrollView, FlatList, RefreshControl, AsyncStorage } from "react-native";
 
 import { flightplans } from "../mocks/FlightplanMock";
 import { Fonts } from "../fonts";
@@ -9,9 +9,12 @@ import SingleFlightplan from "../components/SingleFlightplan";
 import colors from "../colors";
 import Background from "../components/Background";
 import FlightPlanDetailTopBtn from "../components/FlightPlanDetailTopBtn";
+import { IFlightplan } from "../models/IFlightplan";
+import { FLIGHTPLANS } from "../utils/StorageCodes";
 
 interface State {
   isRefreshing: boolean;
+  flightplans: IFlightplan[];
 }
 
 interface Props {
@@ -24,8 +27,13 @@ class Flightplans extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      isRefreshing: false
+      isRefreshing: false,
+      flightplans: [],
     };
+  }
+
+  componentDidMount() {
+    this.getFlightplansFromStorage();
   }
 
   render() {
@@ -34,11 +42,11 @@ class Flightplans extends React.Component<Props, State> {
         <Background />
         <View
           style={{
-            padding: 10
+            padding: 10,
           }}
         >
           <FlatList
-            data={flightplans}
+            data={this.state.flightplans}
             style={{ height: "100%" }}
             renderItem={({ item, index }) => (
               <View
@@ -53,7 +61,7 @@ class Flightplans extends React.Component<Props, State> {
                   height: 200,
                   textShadowColor: "rgba(0, 0, 0, 0.75)",
                   textShadowOffset: { width: -1, height: 1 },
-                  textShadowRadius: 10
+                  textShadowRadius: 10,
                 }}
               >
                 <SingleFlightplan key={index} flightplan={item} navigation={this.props.navigation} />
@@ -64,20 +72,32 @@ class Flightplans extends React.Component<Props, State> {
             refreshControl={<RefreshControl refreshing={this.state.isRefreshing} onRefresh={() => this._onRefresh()} />}
           />
         </View>
-        <FlightPlanDetailTopBtn
-          icon="md-add"
-          onPress={() => this.addFlightPlan()}
-          style={{ elevation: 6, position: "absolute", right: 0, bottom: 0, margin: 20 }}
-        />
+        <View style={styles.bottomRightContainer2}>
+          <FlightPlanDetailTopBtn text="add" onPress={() => this.addFlightPlan()} style={{ marginRight: 20 }} />
+        </View>
       </SafeAreaView>
     );
   }
 
   addFlightPlan() {
-    this.props.navigation.navigate("FlightplanDetails", {});
+    this.props.navigation.navigate("FlightplanMap", { waypoints: [] });
+  }
+
+  async getFlightplansFromStorage() {
+    try {
+      const flightplansString = await AsyncStorage.getItem(FLIGHTPLANS);
+      let flightplans: IFlightplan[];
+      if (flightplansString !== null) {
+        flightplans = JSON.parse(flightplansString) as IFlightplan[];
+        this.setState({ flightplans: flightplans });
+      }
+    } catch (error) {
+      // Error retrieving data
+    }
   }
 
   private _onRefresh() {
+    this.getFlightplansFromStorage();
     this.setState({ isRefreshing: false });
   }
 }
@@ -87,6 +107,7 @@ const styles = StyleSheet.create({
   container: {
     width: "100%",
     height: "100%",
-    backgroundColor: colors.fadedYellow
-  }
+    backgroundColor: colors.fadedYellow,
+  },
+  bottomRightContainer2: { elevation: 6, position: "absolute", right: 0, bottom: 0, margin: 20 },
 });
